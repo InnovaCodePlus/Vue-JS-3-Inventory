@@ -1,6 +1,6 @@
-@import "tailwindcss";
-
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+@import "tailwindcss";
 
 @import "tw-animate-css";
 
@@ -100,4 +100,13 @@
       sans-serif;
     @apply bg-background text-foreground;
   }
+
+  h1 {
+    @apply text-2xl font-bold
+  }
+
+  h2 {
+    @apply text-xl font-bold
+  }
+
 }
