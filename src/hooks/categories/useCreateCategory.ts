@@ -1,29 +1,33 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import categoryService from '@/services/categories';
 import router from "@/router";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
 
 
 
 export const useCreateCategory = () => {
     const name = ref('');
-    const isPending = ref(false);
+    const queryClient = useQueryClient();
+
+    const {isPending, mutate} = useMutation({
+        mutationFn: categoryService.createCategory,
+        onSuccess: (data) => {
+            alert(data.message);
+            queryClient.invalidateQueries({ queryKey: ['categories'] })
+        },
+        onError: () => {
+            alert("Error al crear la categoria");
+        }
+    });
 
 
     const handleSubmit = async () => {
-
-        isPending.value = true;
-
         if (name.value.trim() === '') {
             alert("Debe agregar un nombre a la categoria");
             return;
         }
 
-        const response = await categoryService.createCategory(name.value);
-
-
-        isPending.value = false;
-
-        alert(response.message);
+        mutate(name.value);
 
         router.push({ name: 'categories' });
 
@@ -31,7 +35,7 @@ export const useCreateCategory = () => {
 
     return {
         name,
-        isPending,
+        isPending: computed(() => isPending.value),
         handleSubmit
     }
 }
